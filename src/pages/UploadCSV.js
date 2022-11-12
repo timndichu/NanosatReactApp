@@ -22,8 +22,11 @@ export default function UploadCSV() {
     hiddenFileInput.current.click();
   };
   const handleChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-    setIsFilePicked(true);
+    if(event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+      setIsFilePicked(true);
+    }
+   
   };
 
   const handleClose = () => {
@@ -37,7 +40,6 @@ export default function UploadCSV() {
     const formData = new FormData();
     formData.append('csvFile', selectedFile, selectedFile.name);
    
-
     axios({
       method: 'post',
       url,
@@ -52,11 +54,6 @@ export default function UploadCSV() {
         console.error(e);
         
       });
-
-
-
-
-
   }
 
 
@@ -95,12 +92,13 @@ export default function UploadCSV() {
               <CardHeader title="Click on button to upload CSV" />
 
               <Box sx={{ p: 3, pb: 3 }} dir="ltr">
-                <Button variant="contained" onClick={handleClick} startIcon={<Iconify icon="eva:plus-fill" />}>
+                <Button disabled={isLoading} variant="contained" onClick={handleClick} startIcon={<Iconify icon="eva:plus-fill" />}>
                   Upload CSV
                 </Button>
                 <input
                   type="file"
-                  name="csvFile"                
+                  name="csvFile"  
+                  accept=".xls,.xlsx,.csv, .txt"              
                   ref={hiddenFileInput}
                   onChange={handleChange}
                   style={{ display: 'none' }}
