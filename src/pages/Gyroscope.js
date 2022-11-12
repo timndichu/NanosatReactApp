@@ -1,5 +1,5 @@
 
-import { Grid, Container, Typography, Card, CardHeader, Box } from '@mui/material';
+import { Grid, Container, Typography, Card, CardHeader, Box , ListSubheader} from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
@@ -98,8 +98,22 @@ export default function Gyroscope() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <Card>
-              <CardHeader title="Websocket Readings" />
+            <Card
+              sx={{
+                width: "100%",
+
+                position: "relative",
+                overflow: "auto",
+                maxHeight: 300,
+                "& ul": { padding: 0 },
+              }}
+            >
+              <ListSubheader sx={{ pl: 0 }}>
+                <CardHeader
+                  title="Websocket Readings"
+                  sx={{ color: "black" }}
+                />
+              </ListSubheader>
 
               <Box sx={{ p: 3, pb: 1 }} dir="ltr">
                 {bids}
