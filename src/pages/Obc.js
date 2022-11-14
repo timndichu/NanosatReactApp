@@ -19,16 +19,15 @@ import Chart2 from "../sections/@dashboard/app/Chart2";
 
 // ----------------------------------------------------------------------
 
-export default function Temperature() {
+export default function OBC() {
   const [bids, setBids] = useState(["Waiting for connection..."]);
+
   const [tempValues, setTempValues] = useState([0]);
+  const [currValues, setCurrValues] = useState([0]);
+  const [voltageValues, setVoltageValues] = useState([0]);
   const currentDate1 = new Date();
   const showDate1 = moment(currentDate1).format("HH:mm:ss");
   const [date, setDate] = useState(showDate1.toString());
-
-  const [fetchedtempValues, setFetchedTempValues] = useState([0]);
-  const [fetchedTime, setFetchedTime] = useState([""]);
-  const [fetchedDate, setFetchedDate] = useState([""]);
 
   useEffect(() => {
     const ws = new WebSocket("wss://nanosat.herokuapp.com");
@@ -41,60 +40,77 @@ export default function Temperature() {
       if (json !== "Hello Server") {
         arr = json.split(",");
       }
-      if (arr[0] === "T") {
-        setTempValues((prevTemps) => prevTemps.concat(arr[1]));
+
+      if (arr[0] === "OT") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
+
+        for (let i = 0; i < finalArr.length; i++) {
+          setTempValues((prevTemps) => prevTemps.concat(finalArr[i]));
+        }
+      }
+      else  if (arr[0] === "OC") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
+
+        for (let i = 0; i < finalArr.length; i++) {
+          setCurrValues((prevCurr) => prevCurr.concat(finalArr[i]));
+        }
+        
       }
 
+      else  if (arr[0] === "OL") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
 
-      setBids((prevBids) => prevBids.concat(<br />, json));
+        for (let i = 0; i < finalArr.length; i++) {
+          setVoltageValues((prevVol) => prevVol.concat(finalArr[i]));
+        }
+      }
+
+   
     };
-
-    // fetch data from db
-    fetch('https://nanosat.herokuapp.com/dashboard/getTempReadings')
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(
-          `This is an HTTP error: The status is ${response.status}`
-        );
-      }
-      return response.json();
-    }).then((data) => {
-      Array.from(data.docs).forEach(element => {
-        let date = element["date"];
-        let time = element["time"];
-        let val = element["temp"];
-        setFetchedTempValues((prevTemps) => prevTemps.concat(val));
-        setFetchedTime((prevTime) => prevTime.concat(time));
-        setFetchedDate((prevDate) => prevDate.concat(date));
-      });
-    })
-    .catch((err) => {
-      console.log(err.message);
-     });
-    
 
     return () => ws.close();
   }, []);
 
   return (
-    <Page title="Dashboard | Temperature">
+    <Page title="Dashboard | OBC">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Temperature
+          OBC
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
-              title="MPU6050 Temperature data"
-              subheader="Live Temperature readings from the MPU6050 Sensor"
+              title="OBC data"
+              subheader="OBC readings"
               date={date}
               chartData={[
                 {
                   name: "Temperature",
-                  type: "column",
-                  fill: "solid",
+                  type: "area",
+                  fill: "gradient",
                   data: tempValues,
+                },
+                {
+                  name: "Load Voltage",
+                  type: "area",
+                  fill: "gradient",
+                  data: voltageValues,
+                },
+                {
+                  name: "Temperature",
+                  type: "area",
+                  fill: "gradient",
+                  data: currValues,
                 },
               ]}
             />
@@ -109,7 +125,6 @@ export default function Temperature() {
                 overflow: "auto",
                 maxHeight: 300,
                 "& ul": { padding: 0 },
-                
               }}
             >
               <ListSubheader sx={{ pl: 0 }}>
@@ -124,28 +139,6 @@ export default function Temperature() {
               </Box>
             </Card>
           </Grid>
-
-
-          <Grid item xs={12} md={6} lg={8}>
-            <Chart
-              title="MPU6050 Temperature data"
-              subheader="Fetched Temperature readings from the database"
-              date={fetchedTime}
-              chartData={[
-                {
-                  name: "Temperature",
-                  type: "column",
-                  fill: "solid",
-                  data: fetchedtempValues,
-                },
-              ]}
-            />
-          </Grid>
-
-
-
-
-
         </Grid>
       </Container>
     </Page>

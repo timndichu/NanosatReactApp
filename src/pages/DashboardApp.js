@@ -13,6 +13,7 @@ import {
   Chart,
 
 } from '../sections/@dashboard/app';
+import Chart2 from '../sections/@dashboard/app/Chart2';
 
 // ----------------------------------------------------------------------
 
@@ -66,7 +67,7 @@ export default function DashboardApp() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
-            <Chart
+            <Chart2
               title="MPU6050 (Gyroscope + Accelerometer + Temperature) Sensor data"
               subheader="(+10°C) hotter than last year"
               date={date}

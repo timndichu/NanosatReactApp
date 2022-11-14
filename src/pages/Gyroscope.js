@@ -11,6 +11,7 @@ import {
   Chart,
 
 } from '../sections/@dashboard/app';
+import Chart2 from '../sections/@dashboard/app/Chart2';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,13 @@ export default function Gyroscope() {
   const currentDate1 = new Date();
   const showDate1 = moment(currentDate1).format('HH:mm:ss');
   const [date, setDate] = useState(showDate1.toString());
+
+  const [fetchedAccelerometerX, setfetchedAccelerometerX] = useState([0]);
+  const [fetchedAccelerometerY, setfetchedAccelerometerY] = useState([0]);
+  const [fetchedAccelerometerZ, setfetchedAccelerometerZ] = useState([0]);
+
+  const [fetchedTime, setFetchedTime] = useState([""]);
+  const [fetchedDate, setFetchedDate] = useState([""]);
 
   useEffect(() => {
     const ws = new WebSocket('wss://nanosat.herokuapp.com');
@@ -53,6 +61,39 @@ export default function Gyroscope() {
         prevBids.concat(<br/>, json))
     };
 
+    fetch('https://nanosat.herokuapp.com/dashboard/getAccReadings')
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(
+          `This is an HTTP error: The status is ${response.status}`
+        );
+      }
+      return response.json();
+    }).then((data) => {
+      Array.from(data.docs).forEach(element => {
+        console.log(element);
+        let xAxis = element["xAxis"];
+        let yAxis = element["yAxis"];
+        let zAxis = element["zAxis"];
+        let ourTime = xAxis.time;
+        let ourDate = xAxis.date;
+        
+        setfetchedAccelerometerX((prevAcc)=> 
+        prevAcc.concat(xAxis.val))
+        setfetchedAccelerometerY((prevAcc)=> 
+        prevAcc.concat(yAxis.val))
+        setfetchedAccelerometerZ((prevAcc)=> 
+        prevAcc.concat(zAxis.val))
+
+        setFetchedTime((prevTime) => prevTime.concat(ourTime));
+        setFetchedDate((prevDate) => prevDate.concat(ourDate));
+      });
+    })
+    .catch((err) => {
+      console.log(err.message);
+     });
+
+
     return () => ws.close();
   }, []);
 
@@ -65,7 +106,7 @@ export default function Gyroscope() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
-          <Chart
+          <Chart2
               title="MPU6050 Gyroscope Sensor data"
               subheader="Gyroscope readings from the MPU6050 Sensor"
               date={date}
@@ -121,6 +162,38 @@ export default function Gyroscope() {
             </Card>
           </Grid>
 
+          <Grid item xs={12} md={6} lg={8}>
+            <Chart
+              title="MPU6050 Accelerometer Sensor data"
+              subheader="Fetched Accelerometer readings from the database"
+              date={fetchedTime}
+              chartData={[
+               
+                {
+                  name: 'X axis',
+                  type: 'area',
+                  fill: 'gradient',
+                  data: fetchedAccelerometerX,
+      
+                },
+                {
+                  name: 'Y axis',
+                  type: 'area',
+                  fill: 'gradient',
+                  data: fetchedAccelerometerY,
+      
+                },
+                {
+                  name: 'Z axis',
+                  type: 'area',
+                  fill: 'gradient',
+                  data: fetchedAccelerometerZ,
+      
+                },
+               
+              ]}
+            />
+          </Grid>
           
         </Grid>
       </Container>

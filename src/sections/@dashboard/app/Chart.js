@@ -10,7 +10,7 @@ import { BaseOptionChart } from '../../../components/chart';
 
 Chart.propTypes = {
   title: PropTypes.string,
-  date: PropTypes.string,
+  
   subheader: PropTypes.string,
   chartData: PropTypes.array.isRequired,
   // chartLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -21,12 +21,13 @@ export default function Chart({ title, subheader, date, chartData, ...other }) {
     plotOptions: { bar: { columnWidth: '16%' } },
     fill: { type: chartData.map((i) => i.fill) },
    
-    xaxis: {
+   
       xaxis: {
-        categories: date
-      }
 
-  },
+        categories: date
+      },
+
+ 
     tooltip: {
       shared: true,
       intersect: false,
