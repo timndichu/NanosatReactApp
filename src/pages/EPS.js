@@ -19,7 +19,7 @@ import Chart2 from "../sections/@dashboard/app/Chart2";
 
 // ----------------------------------------------------------------------
 
-export default function OBC() {
+export default function EPS() {
   const [bids, setBids] = useState(["Waiting for connection..."]);
 
   const [tempValues, setTempValues] = useState([0]);
@@ -81,21 +81,21 @@ export default function OBC() {
   }, []);
 
   return (
-    <Page title="Dashboard | OBC">
+    <Page title="Dashboard | EPS">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
-          OBC (On Board Computer)
+          EPS (Electrical Power System)
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
-              title="OBC data"
-              subheader="OBC readings"
+              title="EPS data"
+              subheader="EPS readings"
               date={date}
               chartData={[
                 {
-                  name: "Temperature",
+                  name: "Power Values",
                   type: "area",
                   fill: "gradient",
                   data: tempValues,

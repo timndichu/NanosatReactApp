@@ -17,6 +17,16 @@ const navConfig = [
     icon: getIcon('eva:people-fill'),
   },
   {
+    title: 'OBC',
+    path: '/dashboard/Obc',
+    icon: getIcon('ph:computer-tower-light'),
+  },
+  {
+    title: 'EPS',
+    path: '/dashboard/eps',
+    icon: getIcon('mdi:home-electricity-outline'),
+  },
+  {
     title: 'temperature',
     path: '/dashboard/temperature',
     icon: getIcon('carbon:temperature-celsius'),
@@ -37,6 +47,7 @@ const navConfig = [
     path: '/dashboard/upload-csv',
     icon: getIcon('ph:file-csv'),
   },
+ 
   // {
   //   title: 'Not found',
   //   path: '/404',
