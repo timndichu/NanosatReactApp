@@ -26,9 +26,11 @@ import { green, grey, red } from "@mui/material/colors";
 
 export default function OBC() {
   const [isObcError, setIsObcError] = useState(false);
-  const [obcStatus, setObcStatus] = useState("Normal Mode");
-  const [isSysError, setIsSysError] = useState(true);
-  const [systemStatus, setSystemStatus] = useState("Emergency Mode");
+  const [obcStatus, setObcStatus] = useState("The OBC is Operating Normally");
+  const [isSysError, setIsSysError] = useState(false);
+  const [systemStatus, setSystemStatus] = useState(
+    "The System is Operating Normally"
+  );
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
@@ -137,6 +139,41 @@ export default function OBC() {
         for (let i = 0; i < finalArr.length; i++) {
           setVoltageValues((prevVol) => prevVol.concat(finalArr[i]));
         }
+      } else if (arr[0] === "OB") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+
+        const ob = arr[1];
+
+        if (ob === "A\r") {
+          setObcStatus("The OBC is operating normally");
+          setIsObcError(false);
+        } else if (ob === "B\r") {
+          setObcStatus(
+            "Possible Reason: Temperature above the allowed threshold"
+          );
+          setIsObcError(true);
+        } else if (ob === "C\r") {
+          setObcStatus("Possible Reason: Current above the allowed threshold");
+          setIsObcError(true);
+        }
+      } else if (arr[0] === "OS") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+
+        let os = arr[1];
+
+        if (os === "A\r\n") {
+         
+          setSystemStatus("The System is operating normally");
+          setIsSysError(false);
+        } else if (os === "B\r\n") {
+          setSystemStatus(
+            "Unresponsive.\nPossible Reason: System software frozen."
+          );
+          setIsSysError(true);
+        } else if (os === "C\r\n") {
+          setSystemStatus("System failure.\nPossible Reason: Unknown");
+          setIsSysError(true);
+        }
       }
     };
 
@@ -165,8 +202,6 @@ export default function OBC() {
               <CardHeader title="OBC Status" />
 
               <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-               
-
                 <Box component="div" sx={{ display: "inline" }}>
                   <StyledBadge
                     sx={{ mr: 1 }}
@@ -174,9 +209,14 @@ export default function OBC() {
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     variant="dot"
                   >
-                   <Avatar sx={{ backgroundColor: isObcError ?  red[500] : green[500] }}>
-                    <Iconify icon={"material-symbols:monitor-heart-outline"} />
-               
+                    <Avatar
+                      sx={{
+                        backgroundColor: isObcError ? red[500] : green[500],
+                      }}
+                    >
+                      <Iconify
+                        icon={"material-symbols:monitor-heart-outline"}
+                      />
                     </Avatar>
                   </StyledBadge>
                   <Typography
@@ -184,12 +224,16 @@ export default function OBC() {
                     display="inline"
                     variant="subtitle1"
                   >
-                    {obcStatus}
+                    {isObcError ? "Emergency Mode" : "Normal Mode"}
                   </Typography>
 
-                  <Typography color={grey[500]} variant="caption" display="block">
-                 The system is operating normally
-                </Typography>
+                  <Typography
+                    color={grey[500]}
+                    variant="caption"
+                    display="block"
+                  >
+                    {obcStatus}
+                  </Typography>
                 </Box>
               </Box>
             </Card>
@@ -215,7 +259,11 @@ export default function OBC() {
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     variant="dot"
                   >
-                    <Avatar sx={{ backgroundColor: isSysError ? red[500] : green[500]}}>
+                    <Avatar
+                      sx={{
+                        backgroundColor: isSysError ? red[500] : green[500],
+                      }}
+                    >
                       <Iconify
                         icon={"material-symbols:emergency-home-outline"}
                       />
@@ -226,12 +274,12 @@ export default function OBC() {
                     display="inline"
                     variant="subtitle1"
                   >
-                    {systemStatus}
+                    {isSysError ? "Emergency Mode" : "Normal Mode"}
                   </Typography>
                 </Box>
 
                 <Typography color={grey[500]} variant="caption" display="block">
-                  Unexpected error.
+                  {systemStatus}
                 </Typography>
               </Box>
             </Card>
