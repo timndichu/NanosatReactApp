@@ -1,5 +1,5 @@
 // @mui
-import { Grid, Container, Typography, Card, CardHeader, Box } from '@mui/material';
+import { Grid, Container, Typography, Card, CardHeader,  ListSubheader, Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
@@ -69,7 +69,7 @@ export default function DashboardApp() {
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
               title="MPU6050 (Gyroscope + Accelerometer + Temperature) Sensor data"
-              subheader="(+10°C) hotter than last year"
+            
               date={date}
               chartData={[
                 {
@@ -96,15 +96,28 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <Card>
-              <CardHeader title="Websocket Readings" />
+            <Card
+              sx={{
+                width: "100%",
+
+                position: "relative",
+                overflow: "auto",
+                maxHeight: 300,
+                "& ul": { padding: 0 },
+              }}
+            >
+              <ListSubheader sx={{ pl: 0 }}>
+                <CardHeader
+                  title="Websocket Readings"
+                  sx={{ color: "black" }}
+                />
+              </ListSubheader>
 
               <Box sx={{ p: 3, pb: 1 }} dir="ltr">
                 {bids}
               </Box>
             </Card>
           </Grid>
-
          
         </Grid>
       </Container>

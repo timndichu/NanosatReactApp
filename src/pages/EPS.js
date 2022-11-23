@@ -24,9 +24,13 @@ import Chart2 from "../sections/@dashboard/app/Chart2";
 export default function EPS() {
   const [bids, setBids] = useState(["Waiting for connection..."]);
 
-  const [tempValues, setTempValues] = useState([0]);
-  const [currValues, setCurrValues] = useState([0]);
-  const [voltageValues, setVoltageValues] = useState([0]);
+  const [socValues, setSocValues] = useState([0]);
+  const [v1Values, setV1Values] = useState([0]);
+  const [i1Values, setI1Values] = useState([0]);
+  const [p1Values, setP1Values] = useState([0]);
+  const [v2Values, setV2Values] = useState([0]);
+  const [i2Values, setI2Values] = useState([0]);
+  const [p2Values, setP2Values] = useState([0]);
   const currentDate1 = new Date();
   const showDate1 = moment(currentDate1).format("HH:mm:ss");
   const [date, setDate] = useState(showDate1.toString());
@@ -42,35 +46,77 @@ export default function EPS() {
       if (json !== "Hello Server") {
         arr = json.split(",");
       }
+      console.log(json);
 
-      if (arr[0] === "OT") {
+      if (arr[0] === "SoC") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
         let finalArr = arr;
         finalArr.shift();
 
         for (let i = 0; i < finalArr.length; i++) {
-          setTempValues((prevTemps) => prevTemps.concat(finalArr[i]));
+          setSocValues((prevVals) => prevVals.concat(finalArr[i]));
         }
-      } else if (arr[0] === "OC") {
+      } else if (arr[0] === "V1") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
         let finalArr = arr;
         finalArr.shift();
 
         for (let i = 0; i < finalArr.length; i++) {
-          setCurrValues((prevCurr) => prevCurr.concat(finalArr[i]));
+          setV1Values((prevVals) => prevVals.concat(finalArr[i]));
         }
-      } else if (arr[0] === "OL") {
+      } 
+      else if (arr[0] === "I1") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
         let finalArr = arr;
         finalArr.shift();
 
         for (let i = 0; i < finalArr.length; i++) {
-          setVoltageValues((prevVol) => prevVol.concat(finalArr[i]));
+          setI1Values((prevVals) => prevVals.concat(finalArr[i]));
         }
-      }
+      } 
+      else if (arr[0] === "P1") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
+
+        for (let i = 0; i < finalArr.length; i++) {
+          setP1Values((prevVals) => prevVals.concat(finalArr[i]));
+        }
+      } 
+      else if (arr[0] === "V2") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
+
+        for (let i = 0; i < finalArr.length; i++) {
+          setV2Values((prevVals) => prevVals.concat(finalArr[i]));
+        }
+      } 
+      else if (arr[0] === "I2") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
+
+        for (let i = 0; i < finalArr.length; i++) {
+          setI2Values((prevVals) => prevVals.concat(finalArr[i]));
+        }
+      } 
+      else if (arr[0] === "P2") {
+        setBids((prevBids) => prevBids.concat(<br />, json));
+        arr.pop();
+        let finalArr = arr;
+        finalArr.shift();
+
+        for (let i = 0; i < finalArr.length; i++) {
+          setP2Values((prevVals) => prevVals.concat(finalArr[i]));
+        }
+      } 
     };
 
     return () => ws.close();
@@ -92,7 +138,7 @@ export default function EPS() {
             }}
           >
             <CardHeader title="State of Charge" sx={{ color: "black" }} />
-            <BatteryGauge animated={true} padding={6} value={40} />
+            <BatteryGauge animated={true} padding={6} value={socValues[0]} />
           </Card>
         </Grid>
         </Grid>
@@ -105,22 +151,40 @@ export default function EPS() {
               date={date}
               chartData={[
                 {
-                  name: "Power Values",
+                  name: "P1 Power",
                   type: "area",
                   fill: "gradient",
-                  data: tempValues,
+                  data: p1Values,
                 },
                 {
-                  name: "Load Voltage",
+                  name: "V1 Load Voltage",
                   type: "area",
                   fill: "gradient",
-                  data: voltageValues,
+                  data: v1Values,
                 },
                 {
-                  name: "Current Values",
+                  name: "I1 Supply Current",
                   type: "area",
                   fill: "gradient",
-                  data: currValues,
+                  data: i1Values,
+                },
+                {
+                  name: "V2 Load Voltage",
+                  type: "area",
+                  fill: "gradient",
+                  data: v2Values,
+                },
+                {
+                  name: "I2 Load Current",
+                  type: "area",
+                  fill: "gradient",
+                  data: i2Values,
+                },
+                {
+                  name: "P2 Power",
+                  type: "area",
+                  fill: "gradient",
+                  data: p2Values,
                 },
               ]}
             />
