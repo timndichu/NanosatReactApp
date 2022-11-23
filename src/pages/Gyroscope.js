@@ -61,7 +61,7 @@ export default function Gyroscope() {
         prevBids.concat(<br/>, json))
     };
 
-    fetch('https://nanosat.herokuapp.com/dashboard/getAccReadings')
+    fetch('https://nanosat.herokuapp.com/dashboard/getGyroReadings')
     .then((response) => {
       if (!response.ok) {
         throw new Error(
@@ -108,7 +108,7 @@ export default function Gyroscope() {
           <Grid item xs={12} md={6} lg={8}>
           <Chart2
               title="MPU6050 Gyroscope Sensor data"
-              subheader="Gyroscope readings from the MPU6050 Sensor"
+              subheader="Live Gyroscope readings from the MPU6050 Sensor"
               date={date}
               chartData={[
                
@@ -164,8 +164,8 @@ export default function Gyroscope() {
 
           <Grid item xs={12} md={6} lg={8}>
             <Chart
-              title="MPU6050 Accelerometer Sensor data"
-              subheader="Fetched Accelerometer readings from the database"
+              title="MPU6050 Gyroscope Sensor data"
+              subheader="Fetched Gyroscope readings from the database"
               date={fetchedTime}
               chartData={[
                

@@ -8,7 +8,7 @@ import { BaseOptionChart } from '../../../components/chart';
 
 // ----------------------------------------------------------------------
 
-Chart2.propTypes = {
+Chart3.propTypes = {
   title: PropTypes.string,
   date: PropTypes.string,
   subheader: PropTypes.string,
@@ -17,7 +17,7 @@ Chart2.propTypes = {
   // chartLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default function Chart2({title, subheader, date, chartData, ...other }) {
+export default function Chart3({title, subheader, date, chartData, ...other }) {
   const chartOptions = merge(BaseOptionChart(), {
     plotOptions: { bar: { columnWidth: '16%' } },
     fill: { type: chartData.map((i) => i.fill) },
@@ -34,7 +34,7 @@ export default function Chart2({title, subheader, date, chartData, ...other }) {
       y: {
         formatter: (y) => {
           if (typeof y !== 'undefined') {
-            return `${y.toFixed(2)}`;
+            return `${y.toFixed(2)}${chartData.map((i) => i.symbol)}`;
           }
           return y;
         },

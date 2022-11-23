@@ -19,8 +19,9 @@ import Page from "../components/Page";
 
 // sections
 import { Chart } from "../sections/@dashboard/app";
-import Chart2 from "../sections/@dashboard/app/Chart2";
+import Chart3 from "../sections/@dashboard/app/Chart3";
 import { green, grey, red } from "@mui/material/colors";
+import Chart2 from "../sections/@dashboard/app/Chart2";
 
 // ----------------------------------------------------------------------
 
@@ -215,7 +216,7 @@ export default function OBC() {
                       }}
                     >
                       <Iconify
-                        icon={"material-symbols:monitor-heart-outline"}
+                          icon= { isObcError ? "material-symbols:emergency-home-outline" : "material-symbols:monitor-heart-outline"}
                       />
                     </Avatar>
                   </StyledBadge>
@@ -265,7 +266,7 @@ export default function OBC() {
                       }}
                     >
                       <Iconify
-                        icon={"material-symbols:emergency-home-outline"}
+                        icon= { isSysError ? "material-symbols:emergency-home-outline" : "material-symbols:monitor-heart-outline"}
                       />
                     </Avatar>
                   </StyledBadge2>
@@ -290,7 +291,7 @@ export default function OBC() {
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
               title="OBC data"
-              subheader="OBC readings"
+              subheader="Live OBC readings"
               date={date}
               chartData={[
                 {
@@ -298,18 +299,21 @@ export default function OBC() {
                   type: "area",
                   fill: "gradient",
                   data: tempValues,
+                  symbol: "°C"
                 },
                 {
                   name: "Load Voltage",
                   type: "area",
                   fill: "gradient",
                   data: voltageValues,
+                  symbol: "V"
                 },
                 {
                   name: "Current Values",
                   type: "area",
                   fill: "gradient",
                   data: currValues,
+                  symbol: "mA"
                 },
               ]}
             />
@@ -338,6 +342,63 @@ export default function OBC() {
               </Box>
             </Card>
           </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            <Chart3
+              title="Temperature data"
+              subheader="Live Temperature readings"
+              date={date}
+              chartData={[
+                {
+                  name: "Temperature",
+                  type: "area",
+                  fill: "gradient",
+                  data: tempValues,
+                  symbol: "°C"
+                },
+               
+              ]}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            <Chart3
+              title="Load Voltage data"
+              subheader="Live Voltage readings"
+              date={date}
+              chartData={[
+              
+                {
+                  name: "Load Voltage",
+                  type: "area",
+                  fill: "gradient",
+                  data: voltageValues,
+                  symbol: "V"
+                },
+                
+              ]}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            <Chart3
+              title="Current data"
+              subheader="Live Current readings"
+              date={date}
+              chartData={[
+               
+                {
+                  name: "Current Values",
+                  type: "area",
+                  fill: "gradient",
+                  data: currValues,
+                  symbol: "mA"
+                },
+              ]}
+            />
+          </Grid>
+
+
         </Grid>
       </Container>
     </Page>

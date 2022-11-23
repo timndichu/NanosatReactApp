@@ -108,7 +108,7 @@ export default function Accelerometer() {
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
               title="MPU6050 Accelerometer Sensor data"
-              subheader="Accelerometer readings from the MPU6050 Sensor"
+              subheader="Live Accelerometer readings from the MPU6050 Sensor"
               date={date}
               chartData={[
                

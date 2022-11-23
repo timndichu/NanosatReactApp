@@ -91,7 +91,7 @@ export default function EPS() {
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
               title="EPS data"
-              subheader="EPS readings"
+              subheader="Live EPS readings"
               date={date}
               chartData={[
                 {
