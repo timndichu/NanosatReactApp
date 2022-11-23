@@ -7,6 +7,8 @@ import {
   Box,
   ListSubheader,
 } from "@mui/material";
+
+import BatteryGauge from "react-battery-gauge";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
@@ -50,8 +52,7 @@ export default function EPS() {
         for (let i = 0; i < finalArr.length; i++) {
           setTempValues((prevTemps) => prevTemps.concat(finalArr[i]));
         }
-      }
-      else  if (arr[0] === "OC") {
+      } else if (arr[0] === "OC") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
         let finalArr = arr;
@@ -60,10 +61,7 @@ export default function EPS() {
         for (let i = 0; i < finalArr.length; i++) {
           setCurrValues((prevCurr) => prevCurr.concat(finalArr[i]));
         }
-        
-      }
-
-      else  if (arr[0] === "OL") {
+      } else if (arr[0] === "OL") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
         let finalArr = arr;
@@ -73,8 +71,6 @@ export default function EPS() {
           setVoltageValues((prevVol) => prevVol.concat(finalArr[i]));
         }
       }
-
-   
     };
 
     return () => ws.close();
@@ -86,8 +82,22 @@ export default function EPS() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           EPS (Electrical Power System)
         </Typography>
-
         <Grid container spacing={3}>
+        <Grid item xs={12} md={6} lg={8}>
+          <Card
+            sx={{
+             
+              maxHeight: 300,
+         
+            }}
+          >
+            <CardHeader title="State of Charge" sx={{ color: "black" }} />
+            <BatteryGauge animated={true} padding={6} value={40} />
+          </Card>
+        </Grid>
+        </Grid>
+
+        <Grid marginTop={1} container spacing={3}>
           <Grid item xs={12} md={6} lg={8}>
             <Chart2
               title="EPS data"
