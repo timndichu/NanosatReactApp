@@ -24,7 +24,8 @@ import Chart2 from "../sections/@dashboard/app/Chart2";
 export default function EPS() {
   const [bids, setBids] = useState(["Waiting for connection..."]);
 
-  const [socValues, setSocValues] = useState([0]);
+  const [socValues, setSocValues] = useState([100]);
+  const [charge, setCharge] = useState(100);
   const [v1Values, setV1Values] = useState([0]);
   const [i1Values, setI1Values] = useState([0]);
   const [p1Values, setP1Values] = useState([0]);
@@ -46,17 +47,20 @@ export default function EPS() {
       if (json !== "Hello Server") {
         arr = json.split(",");
       }
-      console.log(json);
-
+      
       if (arr[0] === "SoC") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
         let finalArr = arr;
         finalArr.shift();
-
+        console.log(finalArr);
         for (let i = 0; i < finalArr.length; i++) {
           setSocValues((prevVals) => prevVals.concat(finalArr[i]));
+          
         }
+
+        setCharge(parseInt(finalArr[0]));
+        
       } else if (arr[0] === "V1") {
         setBids((prevBids) => prevBids.concat(<br />, json));
         arr.pop();
@@ -138,7 +142,9 @@ export default function EPS() {
             }}
           >
             <CardHeader title="State of Charge" sx={{ color: "black" }} />
-            <BatteryGauge animated={true} padding={6} value={socValues[0]} />
+            <div><p>{charge} %</p>
+              </div>
+            <BatteryGauge animated={true} padding={6} value={charge} />
           </Card>
         </Grid>
         </Grid>
