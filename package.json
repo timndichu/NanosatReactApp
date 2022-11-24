@@ -46,6 +46,10 @@
     "@iconify/react": "^3.2.2",
     "@mui/lab": "^5.0.0-alpha.88",
     "@mui/material": "^5.8.6",
+    "@progress/kendo-drawing": "^1.17.2",
+    "@progress/kendo-licensing": "^1.2.2",
+    "@progress/kendo-react-gauges": "^5.9.0",
+    "@progress/kendo-react-intl": "^5.9.0",
     "@syncfusion/ej2-react-circulargauge": "^20.3.56",
     "@testing-library/jest-dom": "^5.16.4",
     "apexcharts": "^3.35.3",
@@ -70,6 +74,7 @@
     "recharts": "^2.1.16",
     "simplebar": "^5.3.8",
     "simplebar-react": "^2.4.1",
+    "use-gauge": "^0.5.0",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },

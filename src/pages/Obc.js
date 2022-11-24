@@ -9,7 +9,7 @@ import {
   Avatar,
   ListSubheader,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
 import Iconify from "../components/Iconify";
@@ -22,15 +22,18 @@ import { Chart } from "../sections/@dashboard/app";
 import Chart3 from "../sections/@dashboard/app/Chart3";
 import { green, grey, red } from "@mui/material/colors";
 import Chart2 from "../sections/@dashboard/app/Chart2";
+import SatelliteContext from "../store/satellite-context";
 
 // ----------------------------------------------------------------------
 
 export default function OBC() {
-  const [isObcError, setIsObcError] = useState(false);
-  const [obcStatus, setObcStatus] = useState("The OBC is Operating Normally");
-  const [isSysError, setIsSysError] = useState(false);
+  const ctx = useContext(SatelliteContext);
+  
+  const [isObcError, setIsObcError] = useState(ctx.isObcError);
+  const [obcStatus, setObcStatus] = useState(ctx.obcStatus);
+  const [isSysError, setIsSysError] = useState(ctx.isSysError);
   const [systemStatus, setSystemStatus] = useState(
-    "The System is Operating Normally"
+  ctx.systemStatus
   );
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -146,15 +149,23 @@ export default function OBC() {
         const ob = arr[1];
 
         if (ob === "A\r") {
+          ctx.setIsObcError(false);
+          ctx.setObcStatus("The OBC is operating normally");
           setObcStatus("The OBC is operating normally");
           setIsObcError(false);
         } else if (ob === "B\r") {
+          ctx.setObcStatus(
+            "Possible Reason: Temperature above the allowed threshold"
+          );
           setObcStatus(
             "Possible Reason: Temperature above the allowed threshold"
           );
+          ctx.setIsObcError(true);
           setIsObcError(true);
         } else if (ob === "C\r") {
+          ctx.setObcStatus("Possible Reason: Current above the allowed threshold");
           setObcStatus("Possible Reason: Current above the allowed threshold");
+          ctx.setIsObcError(true);
           setIsObcError(true);
         }
       } else if (arr[0] === "OS") {
@@ -163,23 +174,30 @@ export default function OBC() {
         let os = arr[1];
 
         if (os === "A\r\n") {
-         
+          ctx.setSystemStatus("The System is operating normally");
           setSystemStatus("The System is operating normally");
+          ctx.setIsSysError(false);
           setIsSysError(false);
         } else if (os === "B\r\n") {
+          ctx.setSystemStatus(
+            "Unresponsive.\nPossible Reason: System software frozen."
+          );
           setSystemStatus(
             "Unresponsive.\nPossible Reason: System software frozen."
           );
+          ctx.setIsSysError(true);
           setIsSysError(true);
         } else if (os === "C\r\n") {
+          ctx.setSystemStatus("System failure.\nPossible Reason: Unknown");
           setSystemStatus("System failure.\nPossible Reason: Unknown");
+          ctx.setIsSysError(true);
           setIsSysError(true);
         }
       }
     };
 
     return () => ws.close();
-  }, []);
+  }, [ctx]);
 
   return (
     <Page title="Dashboard | OBC">

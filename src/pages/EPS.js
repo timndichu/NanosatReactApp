@@ -8,8 +8,8 @@ import {
   ListSubheader,
 } from "@mui/material";
 
-import BatteryGauge from "react-battery-gauge";
-import React, { useState, useEffect } from "react";
+import Battery from "../components/battery";
+import React, { useState, useEffect, useContext } from "react";
 import moment from "moment";
 
 // components
@@ -18,14 +18,18 @@ import Page from "../components/Page";
 // sections
 import { Chart } from "../sections/@dashboard/app";
 import Chart2 from "../sections/@dashboard/app/Chart2";
+import SatelliteContext from "../store/satellite-context";
 
 // ----------------------------------------------------------------------
 
 export default function EPS() {
+  const ctx = useContext(SatelliteContext);
   const [bids, setBids] = useState(["Waiting for connection..."]);
 
   const [socValues, setSocValues] = useState([100]);
-  const [charge, setCharge] = useState(100);
+  const [charge, setCharge] = useState(ctx.charge);
+
+
   const [v1Values, setV1Values] = useState([0]);
   const [i1Values, setI1Values] = useState([0]);
   const [p1Values, setP1Values] = useState([0]);
@@ -35,6 +39,31 @@ export default function EPS() {
   const currentDate1 = new Date();
   const showDate1 = moment(currentDate1).format("HH:mm:ss");
   const [date, setDate] = useState(showDate1.toString());
+
+
+  const colors = [
+    {
+      to: 25,
+      color: "#0058e9",
+    },
+    {
+      from: 25,
+      to: 50,
+      color: "#37b400",
+    },
+    {
+      from: 50,
+      to: 75,
+      color: "#ffc000",
+    },
+    {
+      from: 75,
+      color: "#f31700",
+    },
+  ];
+
+  
+
 
   useEffect(() => {
     const ws = new WebSocket("wss://nanosat.herokuapp.com");
@@ -60,6 +89,7 @@ export default function EPS() {
         }
 
         setCharge(parseInt(finalArr[0]));
+        ctx.setCharge(parseInt(finalArr[0]));
         
       } else if (arr[0] === "V1") {
         setBids((prevBids) => prevBids.concat(<br />, json));
@@ -124,7 +154,7 @@ export default function EPS() {
     };
 
     return () => ws.close();
-  }, []);
+  }, [ctx]);
 
   return (
     <Page title="Dashboard | EPS">
@@ -136,15 +166,17 @@ export default function EPS() {
         <Grid item xs={12} md={6} lg={8}>
           <Card
             sx={{
-             
+              maxWidth: 300,
               maxHeight: 300,
-         
+              justifyContent: 'center' 
             }}
           >
-            <CardHeader title="State of Charge" sx={{ color: "black" }} />
-            <div><p>{charge} %</p>
-              </div>
-            <BatteryGauge animated={true} padding={6} value={charge} />
+            <div style={{paddingLeft: 45}}>
+            <CardHeader title="State of Charge" sx={{ color: "black", pb:0 }} />
+            <Battery charge={charge}/>
+            </div>
+         
+         
           </Card>
         </Grid>
         </Grid>
