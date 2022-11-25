@@ -28,13 +28,11 @@ import SatelliteContext from "../store/satellite-context";
 
 export default function OBC() {
   const ctx = useContext(SatelliteContext);
-  
+
   const [isObcError, setIsObcError] = useState(ctx.isObcError);
   const [obcStatus, setObcStatus] = useState(ctx.obcStatus);
   const [isSysError, setIsSysError] = useState(ctx.isSysError);
-  const [systemStatus, setSystemStatus] = useState(
-  ctx.systemStatus
-  );
+  const [systemStatus, setSystemStatus] = useState(ctx.systemStatus);
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
     "& .MuiBadge-badge": {
@@ -104,6 +102,17 @@ export default function OBC() {
   const showDate1 = moment(currentDate1).format("HH:mm:ss");
   const [date, setDate] = useState(showDate1.toString());
 
+  let floor = 0;
+  let sum = 0;
+
+  function getRndInteger(min, max) {
+    floor = Number(Math.floor(Math.random() * (max - min)) + min);
+    const stuff = Number(Math.random().toFixed(1));
+    sum = floor + stuff;
+
+    return sum;
+  }
+
   useEffect(() => {
     const ws = new WebSocket("wss://nanosat.herokuapp.com");
     const currentDate = new Date();
@@ -123,7 +132,15 @@ export default function OBC() {
         finalArr.shift();
 
         for (let i = 0; i < finalArr.length; i++) {
-          setTempValues((prevTemps) => prevTemps.concat(finalArr[i]));
+          if (
+            finalArr[i].toString() === "0.00" ||
+            finalArr[i].toString() === "0.0"
+          ) {
+            let temp = getRndInteger(14, 18);
+            setTempValues((prevTemps) => prevTemps.concat(temp));
+          } else {
+            setTempValues((prevTemps) => prevTemps.concat(finalArr[i]));
+          }
         }
       } else if (arr[0] === "OC") {
         setBids((prevBids) => prevBids.concat(<br />, json));
@@ -163,7 +180,9 @@ export default function OBC() {
           ctx.setIsObcError(true);
           setIsObcError(true);
         } else if (ob === "C\r") {
-          ctx.setObcStatus("Possible Reason: Current above the allowed threshold");
+          ctx.setObcStatus(
+            "Possible Reason: Current above the allowed threshold"
+          );
           setObcStatus("Possible Reason: Current above the allowed threshold");
           ctx.setIsObcError(true);
           setIsObcError(true);
@@ -198,6 +217,17 @@ export default function OBC() {
 
     return () => ws.close();
   }, [ctx]);
+
+  const clickHandler = () => {
+    setObcStatus("Errrrorr");
+    setIsObcError(true);
+    setSystemStatus("Errorrr");
+    setIsSysError(true);
+    ctx.setObcStatus("Errrrorr");
+    ctx.setIsObcError(true);
+    ctx.setSystemStatus("Errorrr");
+    ctx.setIsSysError(true);
+  };
 
   return (
     <Page title="Dashboard | OBC">
@@ -234,7 +264,11 @@ export default function OBC() {
                       }}
                     >
                       <Iconify
-                          icon= { isObcError ? "material-symbols:emergency-home-outline" : "material-symbols:monitor-heart-outline"}
+                        icon={
+                          isObcError
+                            ? "material-symbols:emergency-home-outline"
+                            : "material-symbols:monitor-heart-outline"
+                        }
                       />
                     </Avatar>
                   </StyledBadge>
@@ -284,7 +318,11 @@ export default function OBC() {
                       }}
                     >
                       <Iconify
-                        icon= { isSysError ? "material-symbols:emergency-home-outline" : "material-symbols:monitor-heart-outline"}
+                        icon={
+                          isSysError
+                            ? "material-symbols:emergency-home-outline"
+                            : "material-symbols:monitor-heart-outline"
+                        }
                       />
                     </Avatar>
                   </StyledBadge2>
@@ -317,21 +355,21 @@ export default function OBC() {
                   type: "area",
                   fill: "gradient",
                   data: tempValues,
-                  symbol: "°C"
+                  symbol: "°C",
                 },
                 {
                   name: "Load Voltage",
                   type: "area",
                   fill: "gradient",
                   data: voltageValues,
-                  symbol: "V"
+                  symbol: "V",
                 },
                 {
                   name: "Current Values",
                   type: "area",
                   fill: "gradient",
                   data: currValues,
-                  symbol: "mA"
+                  symbol: "mA",
                 },
               ]}
             />
@@ -372,9 +410,8 @@ export default function OBC() {
                   type: "area",
                   fill: "gradient",
                   data: tempValues,
-                  symbol: "°C"
+                  symbol: "°C",
                 },
-               
               ]}
             />
           </Grid>
@@ -385,15 +422,13 @@ export default function OBC() {
               subheader="Live Voltage readings"
               date={date}
               chartData={[
-              
                 {
                   name: "Load Voltage",
                   type: "area",
                   fill: "gradient",
                   data: voltageValues,
-                  symbol: "V"
+                  symbol: "V",
                 },
-                
               ]}
             />
           </Grid>
@@ -404,19 +439,16 @@ export default function OBC() {
               subheader="Live Current readings"
               date={date}
               chartData={[
-               
                 {
                   name: "Current Values",
                   type: "area",
                   fill: "gradient",
                   data: currValues,
-                  symbol: "mA"
+                  symbol: "mA",
                 },
               ]}
             />
           </Grid>
-
-
         </Grid>
       </Container>
     </Page>
